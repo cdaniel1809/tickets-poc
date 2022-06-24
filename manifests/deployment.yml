@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: "aksticketspoc-944e"
 spec:
-  replicas: 10
+  replicas: 15
   selector:
     matchLabels:
       app: "aksticketspoc-944e"
@@ -13,7 +13,7 @@ spec:
         app: "aksticketspoc-944e"
     spec:
       containers:
-        - name: "aksticketspoc-944e"
+        - name: "aksticketspoc-9888"
           image: "acrticketspoc.azurecr.io/aksticketspoc"
           ports:
           - containerPort: 80

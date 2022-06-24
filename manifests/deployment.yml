@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: "aksticketspoc-944e"
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: "aksticketspoc-944e"

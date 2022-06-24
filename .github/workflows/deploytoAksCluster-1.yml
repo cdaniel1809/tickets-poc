@@ -1,0 +1,50 @@
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: acrticketspoc.azurecr.io
+        username: ${{ secrets.acr_acrticketspoc_username }}
+        password: ${{ secrets.acr_acrticketspoc_password }}
+    
+    - name: Build and push image to ACR
+      id: build-image
+      run: |
+        docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t acrticketspoc.azurecr.io/k8ticketspoc:${{ github.sha }} --label dockerfile-path=Dockerfile
+        docker push acrticketspoc.azurecr.io/k8ticketspoc:${{ github.sha }}
+    
+    - uses: azure/k8s-set-context@v1
+      with:
+         kubeconfig: ${{ secrets.aks_k8ticketspoc_kubeConfig }}
+      id: login
+    
+    - name: Create namespace
+      run: |
+        namespacePresent=`kubectl get namespace | grep k8ticketspoc9a73 | wc -l`
+        if [ $namespacePresent -eq 0 ]
+        then
+            echo `kubectl create namespace k8ticketspoc9a73`
+        fi
+
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: k8ticketspoc9a73
+        container-registry-url: acrticketspoc.azurecr.io
+        container-registry-username: ${{ secrets.acr_acrticketspoc_username }}
+        container-registry-password: ${{ secrets.acr_acrticketspoc_password }}
+        secret-name: k8ticketspocdockerauth
+       
+    - uses: azure/k8s-deploy@v1.2
+      with:
+        namespace: k8ticketspoc9a73
+        manifests: |
+          manifests/deployment-1.yml
+          manifests/service-1.yml
+        images: |
+          acrticketspoc.azurecr.io/k8ticketspoc:${{ github.sha }}
+        imagepullsecrets: |
+          k8ticketspocdockerauth

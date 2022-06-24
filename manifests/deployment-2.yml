@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "k8ticketspoc1-9f16"
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: "k8ticketspoc1-9f16"
+  template:
+    metadata:
+      labels:
+        app: "k8ticketspoc1-9f16"
+    spec:
+      containers:
+        - name: "k8ticketspoc1-9f16"
+          image: "acrticketspoc.azurecr.io/k8ticketspoc1"
+          ports:
+          - containerPort: 80

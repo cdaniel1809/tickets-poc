@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: "k8ticketspoc1-9f16"
 spec:
-  replicas: 10
+  replicas: 15
   selector:
     matchLabels:
       app: "k8ticketspoc1-9f16"

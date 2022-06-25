@@ -13,15 +13,16 @@ async def on_event(partition_context, event):
     JSONObject = json.loads(event.body_as_str(encoding='UTF-8'))
 
     # Update the checkpoint so that the program doesn't read the events
-    
-    TiendaAnoMes = f"total-{JSONObject['year']}-{JSONObject['month']}-{JSONObject['storeid']}"
-    totalAnoMes = f"total-{JSONObject['year']}-{JSONObject['month']}"
-    r.incr(TiendaAnoMes)
-    r.incr(totalAnoMes)
-    
-  
-    # that it has already read when you run it next time.
-    await partition_context.update_checkpoint(event)
+    try:
+        TiendaAnoMes = f"total-{JSONObject['year']}-{JSONObject['month']}-{JSONObject['storeid']}"
+        totalAnoMes = f"total-{JSONObject['year']}-{JSONObject['month']}"
+        r.incr(TiendaAnoMes)
+        r.incr(totalAnoMes)
+    except:
+        print("Error")
+    else:
+        # that it has already read when you run it next time.
+        await partition_context.update_checkpoint(event)
 
 async def main():
     # Create an Azure blob checkpoint store to store the checkpoints.

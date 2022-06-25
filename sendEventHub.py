@@ -22,24 +22,24 @@ async def run():
         
         i = 1
         # Add events to the batch.
-        while i < 3000000:
-            event_data_batch = await producer.create_batch()
-            for x in range(200):
-                JSON = GetJSON()
-                event_data_batch.add(EventData(JSON))
+        while i <= 15000:
+            for y in range(100):
+                event_data_batch = await producer.create_batch()
+                for x in range(222):
+                    JSON = GetJSON(i)
+                    event_data_batch.add(EventData(JSON))
+                # Send the batch of events to the event hub.
+                await producer.send_batch(event_data_batch)
+                print (f"Tickets Sended {str( i * (y + 1) * 222)}")
+                time.sleep(1)
+        i += 1
+            
 
-            # Send the batch of events to the event hub.
-            await producer.send_batch(event_data_batch)
-
-            print (f"Tickets Sended {str( i * 400)}")
-            i += 1
-            time.sleep(1)
-
-def GetJSON():
+def GetJSON(idtienda):
     year = "2022"
     month = "06" #randint(1, 12)
     day = randint(1, 30)
-    storeid = "Tienda" + str(randint(1,15000))
+    storeid = f"Tienda{str(idtienda)}"  #str(randint(1,15000))
     folio = str(randint(1,1000000000))
     id = f"{year}{month}{day}-{storeid}-{folio}"
     expected = JSONdata.replace("||tienda||",storeid).replace("||fecha||",f"{year}{month}{day}").replace("||_id_||",id).replace("||_folio_||",folio)

@@ -1,5 +1,6 @@
 import asyncio
 from pickle import TRUE
+from turtle import st
 from ticketRaw import ticketRaw
 import json
 import time
@@ -8,6 +9,7 @@ from random import randint
 from random import random
 from azure.eventhub.aio import EventHubProducerClient
 from azure.eventhub import EventData
+import sys
 
 with open('ticketRaw.json', 'r') as file:
     JSONdata = file.read().replace('\n', '')
@@ -20,9 +22,10 @@ async def run():
     async with producer:
         # Create a batch.
         
-        i = 1
+        i = int(sys.argv[1])
+        max = int(sys.argv[2])
         # Add events to the batch.
-        while i <= 15000:
+        while i <= max:
             for y in range(100):
                 event_data_batch = await producer.create_batch()
                 for x in range(222):
@@ -30,9 +33,9 @@ async def run():
                     event_data_batch.add(EventData(JSON))
                 # Send the batch of events to the event hub.
                 await producer.send_batch(event_data_batch)
-                print (f"Tickets Sended {str( i * (y + 1) * 222)}")
-                time.sleep(1)
-        i += 1
+                print (f"Tickets Sended Tienda {str(i)} enviados {str( (y + 1) * 222)} : total enviado  {str( ((i- 1) * 22000) + ((y + 1) * 222))}")
+                #time.sleep(1)
+            i += 1
             
 
 def GetJSON(idtienda):

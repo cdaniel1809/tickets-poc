@@ -11,11 +11,14 @@ r = redis.StrictRedis(host='rc-tickets-poc.redis.cache.windows.net',
 async def on_event(partition_context, event):
     # Print the event data.
     JSONObject = json.loads(event.body_as_str(encoding='UTF-8'))
-
+    tienda = JSONObject['Content']['Tienda']
+    date = JSONObject['Content']["FechaAdm"]
+    year = date[0:4]
+    month = date[4:6]
     # Update the checkpoint so that the program doesn't read the events
     try:
-        TiendaAnoMes = f"total-{JSONObject['year']}-{JSONObject['month']}-{JSONObject['storeid']}"
-        totalAnoMes = f"total-{JSONObject['year']}-{JSONObject['month']}"
+        TiendaAnoMes = f"total-{year}-{month}-{tienda}"
+        totalAnoMes = f"total-{year}-{month}"
         r.incr(TiendaAnoMes)
         r.incr(totalAnoMes)
     except:

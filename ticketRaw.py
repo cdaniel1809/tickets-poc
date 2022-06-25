@@ -2,7 +2,7 @@ from calendar import month
 
 
 class ticketRaw:
-    year = ""
-    month = ""
+    DocId = ""
+    DocType = ""
     storeid = ""
     total = 0.0

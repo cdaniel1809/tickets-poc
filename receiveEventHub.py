@@ -1,3 +1,4 @@
+from calendar import month
 import pymongo
 import json
 import asyncio
@@ -42,20 +43,25 @@ async def on_event(partition_context, event):
     # Update the checkpoint so that the program doesn't read the events
     
     db = "pruebasConexion"
-    collectionName = f"ticketsRaw{JSONObject['storeid']}"
-    mycol = get_Connection(JSONObject["year"], JSONObject["month"],collectionName,db)
+    collectionName = f"ticketsRaw{JSONObject['Content']['Tienda']}"
+    date = JSONObject['Content']["FechaAdm"]
+    year = date[0:4]
+    month = date[4:6]
+    mycol = get_Connection(year, month,collectionName,db)
     
-    
-    x = mycol.insert_one(JSONObject)
-    increaseInserted()
+    try:
+        x = mycol.insert_one(JSONObject)
+    except:
+        print("Error")
+    else:
+        increaseInserted()
+        if getInserted() % 10 == 0:
+            print (f"Saving rows {getInserted()}in DB : {db}")
+        #    clearInserted = 0
 
-    if getInserted() % 1000 == 0:
-        print (f"Saving rows {getInserted()}in DB : {db}")
-        clearInserted = 0
-
-    #print(f" the object has been add to the list : {count}")
-    # that it has already read when you run it next time.
-    await partition_context.update_checkpoint(event)
+        #print(f" the object has been add to the list : {count}")
+        # that it has already read when you run it next time.
+        await partition_context.update_checkpoint(event)
 
 async def main():
     # Create an Azure blob checkpoint store to store the checkpoints.

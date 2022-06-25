@@ -1,0 +1,93 @@
+{
+    "_id":"||_id_||",
+    "DocId": "3444d818-6afd-4a1e-b1c4-0210d33f9d6e",
+    "DocType": "TICKETS",
+    "Content": {
+      "Folio": "||_folio_||",
+      "Plaza": "10NLA",
+      "Tienda": "||tienda||",
+      "NumCaja": "2",
+      "Factura": "0",
+      "TotalTicket": "31.00",
+      "FechaAdm": "||fecha||",
+      "FechaXdocs": "||fecha||",
+      "Usuario": "ROBACY8811140",
+      "Origen": "",
+      "_Movtos": [
+        {
+          "RowItemId": "3b1c95e7-d05a-4faf-ac47-f1370ac5184f",
+          "Qty": "1.0000",
+          "UnitRetail": "10.00",
+          "Item": "730399004821",
+          "PvCveMvt": "12",
+          "PvFchMvt": "||fecha||",
+          "PvHraMvt": "11:55",
+          "PvFolProm": "",
+          "VtLlavero": "",
+          "PvTpeFolio": "",
+          "PvAtt1": "",
+          "PvCdtx": "  ",
+          "PvCat": "Frituras",
+          "PvUm": "Pieza"
+        },
+        {
+          "RowItemId": "2ba2e6db-2c6e-4f25-833a-7eb307c9b6b5",
+          "Qty": "1.0000",
+          "UnitRetail": "21.00",
+          "Item": "7506192508216",
+          "PvCveMvt": "12",
+          "PvFchMvt": "||fecha||",
+          "PvHraMvt": "11:55",
+          "PvFolProm": "",
+          "VtLlavero": "",
+          "PvTpeFolio": "",
+          "PvAtt1": "",
+          "PvCdtx": "  ",
+          "PvCat": "Energeticos",
+          "PvUm": "Pieza"
+        },
+        {
+          "RowItemId": "89b92584-bb55-4af4-ae9c-e78a224f18ae",
+          "Qty": "200.0000",
+          "UnitRetail": "31.00",
+          "Item": "0",
+          "PvCveMvt": "99",
+          "PvFchMvt": "||fecha||",
+          "PvHraMvt": "11:55",
+          "PvFolProm": "",
+          "VtLlavero": "",
+          "PvTpeFolio": "",
+          "PvAtt1": "",
+          "PvCdtx": "01",
+          "PvCat": "",
+          "PvUm": ""
+        },
+        {
+          "RowItemId": "c00fdebf-ab35-417d-97c3-11f8662d218e",
+          "Qty": "-169.0000",
+          "UnitRetail": "31.00",
+          "Item": "0",
+          "PvCveMvt": "99",
+          "PvFchMvt": "||fecha||",
+          "PvHraMvt": "11:55",
+          "PvFolProm": "",
+          "VtLlavero": "",
+          "PvTpeFolio": "",
+          "PvAtt1": "",
+          "PvCdtx": "01",
+          "PvCat": "",
+          "PvUm": ""
+        }
+      ]
+    },
+    "EventProcessedUtcTime": "2022-06-23T17:58:07.2540134Z",
+    "PartitionId": 3,
+    "EventEnqueuedUtcTime": "2022-06-23T16:58:06.6810000Z",
+    "IoTHub": {
+      "MessageId": null,
+      "CorrelationId": null,
+      "ConnectionDeviceId": "10nla50p4z2",
+      "ConnectionDeviceGenerationId": "637910469703562549",
+      "EnqueuedTime": "2022-06-23T16:58:06.6860000Z"
+    }
+  }

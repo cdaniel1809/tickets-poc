@@ -14,8 +14,10 @@ async def on_event(partition_context, event):
 
     # Update the checkpoint so that the program doesn't read the events
     
-    key = f"total{JSONObject['year']}-{JSONObject['month']}-{JSONObject['storeid']}"
-    r.incr(key)
+    TiendaAnoMes = f"total-{JSONObject['year']}-{JSONObject['month']}-{JSONObject['storeid']}"
+    totalAnoMes = f"total-{JSONObject['year']}-{JSONObject['month']}"
+    r.incr(TiendaAnoMes)
+    r.incr(totalAnoMes)
     
   
     # that it has already read when you run it next time.

@@ -55,7 +55,7 @@ async def on_event(partition_context, event):
         print("Error")
     else:
         increaseInserted()
-        if getInserted() % 10 == 0:
+        if getInserted() % 1000 == 0:
             print (f"Saving rows {getInserted()}in DB : {db}")
         #    clearInserted = 0
 

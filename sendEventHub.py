@@ -24,7 +24,7 @@ async def run():
         # Add events to the batch.
         while i < 3000000:
             event_data_batch = await producer.create_batch()
-            for x in range(10):
+            for x in range(200):
                 JSON = GetJSON()
                 event_data_batch.add(EventData(JSON))
 

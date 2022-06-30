@@ -1,0 +1,68 @@
+#instalar mongo
+https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
+
+wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+
+
+
+/usr/bin/mongod --unixSocketPrefix=/run/mongodb --config /etc/mongodb.conf 
+
+#editar el conf
+# 1. modificar la ip
+# 2. establecer la seguridad
+# 3. modificar la ruta de los archivos de datos y log
+# 4. configurar el replica set ... pendiente
+# 5. crear carpetas para la bd y el log, dar permisos de escritura
+# 6. crear usuario admin
+
+sudo nano /etc/mongodb.conf
+
+
+# Where to store the data.
+dbpath=/mongodrive/lib/mongodb
+
+#where to log
+logpath=/mongodrive/log/mongodb/mongodb.log
+
+logappend=true
+
+bind_ip = 127.0.0.1,10.1.0.4
+#port = 27017
+
+# Enable journaling, http://www.mongodb.org/display/DOCS/Journaling
+journal=true
+
+# Enables periodic logging of CPU utilization and I/O wait
+#cpu = true
+
+# Turn on/off security.  Off is currently the default
+#noauth = true
+auth = true
+
+
+
+# Crear carpetas 
+sudo mkdir /mongodrive/lib/mongodb
+sudo chown mongodb mongodb
+sudo mkdir /mongodrive/log/mongodb/
+sudo chown mongodb mongodb
+sudo chmod 777 /mongodrive/lib/mongodb
+sudo chmod 777 /mongodrive/log/mongodb/
+
+#crear primer usuario admin
+use admin
+db.createUser({
+    user: "mongoAdmin",
+    pwd: passwordPrompt(),
+    roles: [
+        {
+            role: "userAdminAnyDatabase",
+            db: "admin"
+        },
+        "readWriteAnyDatabase"
+    ],
+});
+
+
+db.auth({user:"mongoAdmin", pwd : passwordPrompt()})
+mongosh --port 27017  --authenticationDatabase "admin" -u "myUserAdmin" -p

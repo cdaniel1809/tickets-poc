@@ -1,0 +1,23 @@
+#https://docs.microsoft.com/en-us/azure/virtual-machines/linux/tutorial-manage-disks
+
+
+lsblk -o NAME,HCTL,SIZE,MOUNTPOINT | grep -i "sd"
+
+#particionar y montar sistema de archivos
+sudo parted /dev/sda --script mklabel gpt mkpart xfspart xfs 0% 100%
+
+sudo mkfs.xfs /dev/sda1
+sudo partprobe /dev/sda1
+
+#mointar
+sudo mkdir /mongodrive && sudo mount /dev/sda1 /mongodrive
+
+#validar y montar permanentemente
+df -h | grep -i "sd"
+sudo -i blkid
+
+#copiar el id y preparar el archivo /etc/fstab
+#   UUID="38df8bd6-b33d-4102-b7f9-9e182f234d04" TYPE="xfs" PARTLABEL="xfspart" PARTUUID="423c8036-33bb-4df9-a0c4-9ac1cc46e0f4"
+# UUID=33333333-3b3b-3c3c-3d3d-3e3e3e3e3e3e   /mongodrive  xfs    defaults,nofail   1  2
+
+sudo nano /etc/fstab

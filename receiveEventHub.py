@@ -15,7 +15,7 @@ def get_Connection(year, month, collectionName, dbName):
     #if key in connections:
     #    return connections[key]
     #else:
-    mongoConnectionString = f"mongodb://mongo-{year}-{month}.centralus.cloudapp.azure.com:27017/"
+    mongoConnectionString = f"mongodb://mongoAdmin:Pa$$w0rd#12345@mongo-{year}-{month}.eastus.cloudapp.azure.com:27017/?authSource=admin&authMechanism=SCRAM-SHA-256"
     myclient = pymongo.MongoClient(mongoConnectionString)
     mydb = myclient[dbName]
     mycol = mydb[collectionName]
@@ -51,8 +51,8 @@ async def on_event(partition_context, event):
     
     try:
         x = mycol.insert_one(JSONObject)
-    except:
-        print("Error")
+    except Exception as e:
+        print(e)
     else:
         increaseInserted()
         if getInserted() % 1000 == 0:
@@ -65,10 +65,10 @@ async def on_event(partition_context, event):
 
 async def main():
     # Create an Azure blob checkpoint store to store the checkpoints.
-    checkpoint_store = BlobCheckpointStore.from_connection_string("DefaultEndpointsProtocol=https;AccountName=ehcheckpointoxxopoc;AccountKey=HlmWqKXfJfRWlrdVRbFf/kPhB/smAP0nlWjyeZS0vVoENPmZ0KYjS3g45QQwQ0Dtz+BqplKrlOSB+AStC23NiQ==;EndpointSuffix=core.windows.net", "checkpoint")
+    checkpoint_store = BlobCheckpointStore.from_connection_string("DefaultEndpointsProtocol=https;AccountName=ehcheckpointoxxopoc1;AccountKey=e4oFqUXTmjhxU56/zuPys78RfYeecbylPv6Mc6nc3z/Wf/F+XVZ5MFDmmZqtuIpSR7ZDkHgdMgSV+AStJagzGg==;EndpointSuffix=core.windows.net", "checkpoint")
 
     # Create a consumer client for the event hub.
-    client = EventHubConsumerClient.from_connection_string("Endpoint=sb://eh-oxxo-poc.servicebus.windows.net/;SharedAccessKeyName=read-write;SharedAccessKey=K6fJKPN59x3PK+hqT5NcdzuHi7AETeC1B7SdT30tUDg=;EntityPath=recepcion-tickets", consumer_group="$Default", eventhub_name="recepcion-tickets", checkpoint_store=checkpoint_store)
+    client = EventHubConsumerClient.from_connection_string("Endpoint=sb://eh-tickets-poc.servicebus.windows.net/;SharedAccessKeyName=lectura-escritura;SharedAccessKey=f4A1J5Yo+wvcHLGU7Wbp/JMzl3yoAcmx1QrSAwYCp2w=;EntityPath=recepcion-tickets", consumer_group="ticketsraw", eventhub_name="recepcion-tickets", checkpoint_store=checkpoint_store)
     async with client:
         # Call the receive method. Read from the beginning of the partition (starting_position: "-1")
         await client.receive(on_event=on_event,  starting_position="-1")

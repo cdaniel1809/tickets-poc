@@ -15,7 +15,7 @@ CONNECTION_STR = "Endpoint=sb://sb-tickets-poc.servicebus.windows.net/;SharedAcc
 
 def getBlobClient(ano, mes, tienda):
     strDate = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-    client = BlobClient.from_connection_string(conn_str="DefaultEndpointsProtocol=https;AccountName=ehcheckpointoxxopoc1;AccountKey=e4oFqUXTmjhxU56/zuPys78RfYeecbylPv6Mc6nc3z/Wf/F+XVZ5MFDmmZqtuIpSR7ZDkHgdMgSV+AStJagzGg==;EndpointSuffix=core.windows.net", container_name="facturasglobales", blob_name=f"{ano}/{mes}/{tienda}_{strDate}.xml")
+    client = BlobClient.from_connection_string(conn_str="DefaultEndpointsProtocol=https;AccountName=ehcheckpointoxxopoc1;AccountKey=e4oFqUXTmjhxU56/zuPys78RfYeecbylPv6Mc6nc3z/Wf/F+XVZ5MFDmmZqtuIpSR7ZDkHgdMgSV+AStJagzGg==;EndpointSuffix=core.windows.net", container_name="facturasglobales", blob_name=f"{ano}/{mes}/{tienda}/{tienda}_{strDate}.xml")
     return client
 
 def getEventHubClient(checkpointContainer, consumerGroup, eventHubName):

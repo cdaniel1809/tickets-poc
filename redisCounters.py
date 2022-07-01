@@ -1,12 +1,9 @@
 import asyncio
-import redis
 import json
-from azure.eventhub.aio import EventHubConsumerClient
-from azure.eventhub.extensions.checkpointstoreblobaio import BlobCheckpointStore
+from connectionController import *
 
 #rc-tickets-poc.redis.cache.windows.net:6380,password=ggCSNd1d9EVbZ2Kipm07PxsdTgvoZMRVeAzCaPEMTIU=,ssl=True,abortConnect=False
-r = redis.StrictRedis(host='rc-tickets-poc-op.redis.cache.windows.net',
-        port=6380, db=0, password='66hRm96lEwHxmMmaVwQjp8aelOQrPpdtQAzCaEPQdME=', ssl=True)
+r = getRedisClient()
 
 async def on_event(partition_context, event):
     # Print the event data.
@@ -44,11 +41,8 @@ async def on_event(partition_context, event):
         await partition_context.update_checkpoint(event)
 
 async def main():
-    
-    checkpoint_store = BlobCheckpointStore.from_connection_string("DefaultEndpointsProtocol=https;AccountName=ehcheckpointoxxopoc1;AccountKey=e4oFqUXTmjhxU56/zuPys78RfYeecbylPv6Mc6nc3z/Wf/F+XVZ5MFDmmZqtuIpSR7ZDkHgdMgSV+AStJagzGg==;EndpointSuffix=core.windows.net", "checkpoint-redis")
-
-    # Create a consumer client for the event hub.
-    client = EventHubConsumerClient.from_connection_string("Endpoint=sb://eh-tickets-poc.servicebus.windows.net/;SharedAccessKeyName=lectura-escritura;SharedAccessKey=f4A1J5Yo+wvcHLGU7Wbp/JMzl3yoAcmx1QrSAwYCp2w=;EntityPath=recepcion-tickets", consumer_group="rediscounters", eventhub_name="recepcion-tickets", checkpoint_store=checkpoint_store)
+   
+    client = getEventHubClient()
     async with client:
         # Call the receive method. Read from the beginning of the partition (starting_position: "-1")
         await client.receive(on_event=on_event,  starting_position="-1")

@@ -11,4 +11,5 @@ runcmd:
  - [git, clone, 'https://github.com/cdaniel1809/tickets-poc.git']
  - [cd, 'tickets-poc']
  - [pip3, install, -r, ./requirements.txt]
- - [python3, receiveEventHub.py]
+ - [python3, ./receiveEventHub.py]
+ 

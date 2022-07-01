@@ -42,7 +42,7 @@ async def on_event(partition_context, event):
 
 async def main():
    
-    client = getEventHubClient()
+    client = getEventHubClient("checkpoint-redis","rediscounters","recepcion-tickets")
     async with client:
         # Call the receive method. Read from the beginning of the partition (starting_position: "-1")
         await client.receive(on_event=on_event,  starting_position="-1")

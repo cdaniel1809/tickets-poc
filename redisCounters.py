@@ -17,12 +17,28 @@ async def on_event(partition_context, event):
     month = date[4:6]
     # Update the checkpoint so that the program doesn't read the events
     try:
-        TiendaAnoMes = f"total-{year}-{month}-{tienda}"
-        totalAnoMes = f"total-{year}-{month}"
-        r.incr(TiendaAnoMes)
+        totalAno = f"{year}"
+        totalAnoMes = f"{year}-{month}"
+        totalAnoTienda = f"{year}-{tienda}"
+        totalAnoMesTienda = f"{year}-{month}-{tienda}"
+        
+        r.incr(totalAno)
         r.incr(totalAnoMes)
-    except:
-        print("Error")
+        r.incr(totalAnoTienda)
+        r.incr(totalAnoMesTienda)
+    except Exception as e:
+        await partition_context.update_checkpoint(event)
+        errortotalAno = f"error-{year}"
+        errortotalAnoMes = f"error-{year}-{month}"
+        errortotalAnoTienda = f"error-{year}-{tienda}"
+        errortotalAnoMesTienda = f"error-{year}-{month}-{tienda}"
+
+        r.incr(errortotalAno)
+        r.incr(errortotalAnoMes)
+        r.incr(errortotalAnoTienda)
+        r.incr(errortotalAnoMesTienda)
+
+        print(e)
     else:
         # that it has already read when you run it next time.
         await partition_context.update_checkpoint(event)

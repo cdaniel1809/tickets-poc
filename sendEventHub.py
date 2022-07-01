@@ -1,6 +1,4 @@
 import asyncio
-from pickle import TRUE
-from turtle import st
 from ticketRaw import ticketRaw
 import json
 import time
@@ -26,14 +24,14 @@ async def run():
         max = int(sys.argv[2])
         # Add events to the batch.
         while i <= max:
-            for y in range(100):
+            for y in range(70):
                 event_data_batch = await producer.create_batch()
-                for x in range(222):
+                for x in range(333):
                     JSON = GetJSON(i)
                     event_data_batch.add(EventData(JSON))
                 # Send the batch of events to the event hub.
                 await producer.send_batch(event_data_batch)
-                print (f"Tickets Sended Tienda {str(i)} enviados {str( (y + 1) * 222)} : total enviado  {str( ((i- 1) * 22000) + ((y + 1) * 222))}")
+                print (f"Tickets Sended Tienda {str(i)} enviados {str( (y + 1) * 333)} : total enviado  {str( ((i- 1) * 22000) + ((y + 1) * 222))}")
                 #time.sleep(1)
             i += 1
             

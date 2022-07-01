@@ -27,10 +27,10 @@ async def on_event(partition_context, event):
     totalAnoTiendaMongo = f"totalAnoTiendaMongo{year}-{collectionName}"
     totalAnoMesTiendaMongo = f"totalAnoMesTiendaMongo{year}-{month}-{collectionName}"
     
-    errorTotalAnoMongo = f"totalAnoMongo{year}"
-    errorAnoMesMongo = f"totalAnoMesMongo{year}-{month}"
-    errorTotalAnoTiendaMongo = f"totalAnoTiendaMongo{year}-{collectionName}"
-    errorTotalAnoMesTiendaMongo = f"totalAnoMesTiendaMongo{year}-{month}-{collectionName}"
+    errorTotalAnoMongo = f"errortotalAnoMongo{year}"
+    errorAnoMesMongo = f"errortotalAnoMesMongo{year}-{month}"
+    errorTotalAnoTiendaMongo = f"errortotalAnoTiendaMongo{year}-{collectionName}"
+    errorTotalAnoMesTiendaMongo = f"errortotalAnoMesTiendaMongo{year}-{month}-{collectionName}"
     
 
     try:
@@ -44,9 +44,9 @@ async def on_event(partition_context, event):
     except Exception as e:
         await partition_context.update_checkpoint(event)
         r.incr(errorTotalAnoMongo)
-        r.incr(errorTotalAnoMongo)
-        r.incr(errorTotalAnoMongo)
-        r.incr(errorTotalAnoMongo)
+        r.incr(errorAnoMesMongo)
+        r.incr(errorTotalAnoTiendaMongo)
+        r.incr(errorTotalAnoMesTiendaMongo)
 
         print(e)
     else:

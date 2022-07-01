@@ -5,8 +5,8 @@ from azure.eventhub.aio import EventHubConsumerClient
 from azure.eventhub.extensions.checkpointstoreblobaio import BlobCheckpointStore
 
 #rc-tickets-poc.redis.cache.windows.net:6380,password=ggCSNd1d9EVbZ2Kipm07PxsdTgvoZMRVeAzCaPEMTIU=,ssl=True,abortConnect=False
-r = redis.StrictRedis(host='rc-tickets-poc.redis.cache.windows.net',
-        port=6379, db=0, password='ggCSNd1d9EVbZ2Kipm07PxsdTgvoZMRVeAzCaPEMTIU=', ssl=False)
+r = redis.StrictRedis(host='rc-tickets-poc-op.redis.cache.windows.net',
+        port=6380, db=0, password='TVEdEirE2vH76R60ztC1kDio54i2YzfW3AzCaC0AnFw=', ssl=True)
 
 async def on_event(partition_context, event):
     # Print the event data.
@@ -17,10 +17,10 @@ async def on_event(partition_context, event):
     month = date[4:6]
     # Update the checkpoint so that the program doesn't read the events
     try:
-        totalAno = f"{year}"
-        totalAnoMes = f"{year}-{month}"
-        totalAnoTienda = f"{year}-{tienda}"
-        totalAnoMesTienda = f"{year}-{month}-{tienda}"
+        totalAno = f"totalAno{year}"
+        totalAnoMes = f"totalAnoMes{year}-{month}"
+        totalAnoTienda = f"totalAnoTienda{year}-{tienda}"
+        totalAnoMesTienda = f"totalAnoMesTienda{year}-{month}-{tienda}"
         
         r.incr(totalAno)
         r.incr(totalAnoMes)
@@ -28,10 +28,10 @@ async def on_event(partition_context, event):
         r.incr(totalAnoMesTienda)
     except Exception as e:
         await partition_context.update_checkpoint(event)
-        errortotalAno = f"error-{year}"
-        errortotalAnoMes = f"error-{year}-{month}"
-        errortotalAnoTienda = f"error-{year}-{tienda}"
-        errortotalAnoMesTienda = f"error-{year}-{month}-{tienda}"
+        errortotalAno = f"errortotalAno-{year}"
+        errortotalAnoMes = f"errortotalAnoMes-{year}-{month}"
+        errortotalAnoTienda = f"errortotalAnoTienda-{year}-{tienda}"
+        errortotalAnoMesTienda = f"errortotalAnoMesTienda-{year}-{month}-{tienda}"
 
         r.incr(errortotalAno)
         r.incr(errortotalAnoMes)
@@ -44,11 +44,11 @@ async def on_event(partition_context, event):
         await partition_context.update_checkpoint(event)
 
 async def main():
-    # Create an Azure blob checkpoint store to store the checkpoints.
-    checkpoint_store = BlobCheckpointStore.from_connection_string("DefaultEndpointsProtocol=https;AccountName=ehcheckpointoxxopoc;AccountKey=HlmWqKXfJfRWlrdVRbFf/kPhB/smAP0nlWjyeZS0vVoENPmZ0KYjS3g45QQwQ0Dtz+BqplKrlOSB+AStC23NiQ==;EndpointSuffix=core.windows.net", "checkpoint")
+    
+    checkpoint_store = BlobCheckpointStore.from_connection_string("DefaultEndpointsProtocol=https;AccountName=ehcheckpointoxxopoc1;AccountKey=e4oFqUXTmjhxU56/zuPys78RfYeecbylPv6Mc6nc3z/Wf/F+XVZ5MFDmmZqtuIpSR7ZDkHgdMgSV+AStJagzGg==;EndpointSuffix=core.windows.net", "checkpoint-redis")
 
     # Create a consumer client for the event hub.
-    client = EventHubConsumerClient.from_connection_string("Endpoint=sb://eh-oxxo-poc.servicebus.windows.net/;SharedAccessKeyName=read-write;SharedAccessKey=K6fJKPN59x3PK+hqT5NcdzuHi7AETeC1B7SdT30tUDg=;EntityPath=recepcion-tickets", consumer_group="rediscounters", eventhub_name="recepcion-tickets", checkpoint_store=checkpoint_store)
+    client = EventHubConsumerClient.from_connection_string("Endpoint=sb://eh-tickets-poc.servicebus.windows.net/;SharedAccessKeyName=lectura-escritura;SharedAccessKey=f4A1J5Yo+wvcHLGU7Wbp/JMzl3yoAcmx1QrSAwYCp2w=;EntityPath=recepcion-tickets", consumer_group="rediscounters", eventhub_name="recepcion-tickets", checkpoint_store=checkpoint_store)
     async with client:
         # Call the receive method. Read from the beginning of the partition (starting_position: "-1")
         await client.receive(on_event=on_event,  starting_position="-1")

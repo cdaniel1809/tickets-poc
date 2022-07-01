@@ -6,7 +6,7 @@ from azure.eventhub.extensions.checkpointstoreblobaio import BlobCheckpointStore
 
 #rc-tickets-poc.redis.cache.windows.net:6380,password=ggCSNd1d9EVbZ2Kipm07PxsdTgvoZMRVeAzCaPEMTIU=,ssl=True,abortConnect=False
 r = redis.StrictRedis(host='rc-tickets-poc-op.redis.cache.windows.net',
-        port=6380, db=0, password='TVEdEirE2vH76R60ztC1kDio54i2YzfW3AzCaC0AnFw=', ssl=True)
+        port=6380, db=0, password='66hRm96lEwHxmMmaVwQjp8aelOQrPpdtQAzCaEPQdME=', ssl=True)
 
 async def on_event(partition_context, event):
     # Print the event data.

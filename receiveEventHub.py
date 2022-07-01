@@ -10,17 +10,17 @@ connections = {}
 inserted = 0
 
 def get_Connection(year, month, collectionName, dbName):
-    #key = f"{year}-{month}-{collectionName}"
-    
-    #if key in connections:
-    #    return connections[key]
-    #else:
-    mongoConnectionString = f"mongodb://mongoAdmin:Pa$$w0rd#12345@mongo-{year}-{month}.eastus.cloudapp.azure.com:27017/?authSource=admin&authMechanism=SCRAM-SHA-256"
-    myclient = pymongo.MongoClient(mongoConnectionString)
-    mydb = myclient[dbName]
-    mycol = mydb[collectionName]
-    #connections[key] = mycol
-    return mycol #connections[key]
+    global connections
+    key = f"{year}-{month}"
+    if key in connections:
+        return connections[key]
+    else:
+        mongoConnectionString = f"mongodb://mongoAdmin:Pa$$w0rd#12345@mongo-{year}-{month}.eastus.cloudapp.azure.com:27017/?authSource=admin&authMechanism=SCRAM-SHA-256"
+        myclient = pymongo.MongoClient(mongoConnectionString)
+        mydb = myclient[dbName]
+        mycol = mydb[collectionName]
+        connections[key] = mycol
+        return connections[key]
 
 def getInserted():
     global inserted
@@ -52,6 +52,7 @@ async def on_event(partition_context, event):
     try:
         x = mycol.insert_one(JSONObject)
     except Exception as e:
+        await partition_context.update_checkpoint(event)
         print(e)
     else:
         increaseInserted()

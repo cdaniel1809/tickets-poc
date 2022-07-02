@@ -12,6 +12,7 @@ SUBSCRIPTION_NAME="facturaglobalprocesadores"
 TOPIC_NAME = "facturaglobal"
 CONNECTION_STR = "Endpoint=sb://sb-tickets-poc.servicebus.windows.net/;SharedAccessKeyName=readwrite;SharedAccessKey=0oe82nNd3wqyRdl1k0zTR5h/VrwxiC2qrlVAsc/lY7U=;EntityPath=facturaglobal"
 
+APPINSIGHT_INSTRUMENTATION_HEY = "d85f6718-2588-4168-b8d9-0d9f1ac6b9d8"
 
 def getBlobClient(ano, mes, tienda):
     strDate = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")

@@ -2,7 +2,11 @@ import json
 import asyncio
 from connectionController import *
 from facturaGlobalXMLCreator import *
-from azure.servicebus import ServiceBusClient, ServiceBusMessage
+from azure.servicebus import ServiceBusClient
+from applicationinsights import TelemetryClient
+
+logging = TelemetryClient(APPINSIGHT_INSTRUMENTATION_HEY)
+
 
 async def main():
     servicebus_client = ServiceBusClient.from_connection_string(conn_str=CONNECTION_STR, logging_enable=True)
@@ -11,10 +15,24 @@ async def main():
             receiver = servicebus_client.get_subscription_receiver(topic_name=TOPIC_NAME, subscription_name=SUBSCRIPTION_NAME, max_wait_time=5) 
             with receiver:
                 for msg in receiver:
-                    JSONObject =json.loads(str(msg))
-                    print("Received: " + str(msg))
-                    crearXML(JSONObject['ano'],JSONObject['mes'], f"Tienda{JSONObject['tienda']}")
-                    receiver.complete_message(msg)
+                    try:
+                        JSONObject =json.loads(str(msg))
+                        ano = JSONObject['ano']
+                        mes = JSONObject['mes']
+                        tienda = f"Tienda{JSONObject['tienda']}"
+                        
+                        logging.track_event("Received: " + str(msg))
+                        logging.track_event(f"Inicia la generacion de XML : ano : {ano}, mes : {mes}, tienda : {tienda} ")
+
+                        crearXML(ano,mes,tienda )
+                        
+                        logging.track_event(f"Se ha generado el XML : ano : {ano}, mes : {mes}, tienda : {tienda} ")
+                        logging.flush()
+                    except Exception as e:
+                        logging.track_exception(*sys.exc_info(), properties={ 'ano': ano, 'mes' : mes, 'tienda': tienda })
+                        logging.flush()
+                    else:
+                        receiver.complete_message(msg)
         time.sleep(1)
 
 if __name__ == '__main__':

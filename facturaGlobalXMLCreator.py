@@ -1,24 +1,30 @@
-from logging import info
+from applicationinsights import TelemetryClient
 import xml.etree.ElementTree as ET
 from connectionController import *
 from Entities.ControlDBEntities import ControlFacturaGlobal
 import time
-import json
+import sys 
+
+logging = TelemetryClient(APPINSIGHT_INSTRUMENTATION_HEY)
 
 def crearXML(ano, mes, tienda):
-    fecha_inicio = time.time()
-    root = crearRoot()
-    crearNodoInformacionGlobal(ano, mes,root)
-    crearNodoEmisor(root)
-    crearNodoReceptor(root)
-    conteoTickets = crearNodoConceptos(ano, mes, tienda,root)
-    crearNodoImpuestosRoot(root)
-    blob = getBlobClient(ano, mes, tienda)
-    data = ET.tostring(root, xml_declaration=True, encoding='UTF-8')
-    blob.upload_blob(data)
-    fecha_fin = time.time()
-    registrarFacturaGlobalMongo(blob.url, fecha_inicio, fecha_fin, conteoTickets, ano, mes, tienda)
-    #print(f"url:{blob.url}, incio:  {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(fecha_inicio))}, fin : {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(fecha_fin))}, elapsed:  {fecha_fin - fecha_inicio}")
+    try:
+        fecha_inicio = time.time()
+        root = crearRoot()
+        crearNodoInformacionGlobal(ano, mes,root)
+        crearNodoEmisor(root)
+        crearNodoReceptor(root)
+        conteoTickets = crearNodoConceptos(ano, mes, tienda,root)
+        crearNodoImpuestosRoot(root)
+        blob = getBlobClient(ano, mes, tienda)
+        data = ET.tostring(root, xml_declaration=True, encoding='UTF-8')
+        blob.upload_blob(data)
+        fecha_fin = time.time()
+        registrarFacturaGlobalMongo(blob.url, fecha_inicio, fecha_fin, conteoTickets, ano, mes, tienda)
+    except Exception as e:
+        logging.track_exception(*sys.exc_info(), properties={ 'ano': ano, 'mes' : mes, 'tienda': tienda })
+        logging.flush()
+        raise Exception(e)
 
 def registrarFacturaGlobalMongo(url, fecha_inicio, fecha_fin, ticketsEnFactura, ano, mes, tienda):
     mongoDBControl = getMongoControllerConnection()

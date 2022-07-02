@@ -23,6 +23,7 @@ async def main():
                         
                         logging.track_event("Received: " + str(msg))
                         logging.track_event(f"Inicia la generacion de XML : ano : {ano}, mes : {mes}, tienda : {tienda} ")
+                        logging.flush()
 
                         crearXML(ano,mes,tienda )
                         
@@ -33,7 +34,7 @@ async def main():
                         logging.flush()
                     else:
                         receiver.complete_message(msg)
-        time.sleep(1)
+        time.sleep(10)
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()

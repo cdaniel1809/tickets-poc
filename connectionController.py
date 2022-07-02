@@ -46,7 +46,7 @@ def getMongoControllerConnection():
 
 def get_Connection(year, month, collectionName, dbName):
     global connections
-    key = f"{year}-{month}"
+    key = f"{year}-{month}-{collectionName}"
     if key in connections:
         return connections[key]
     else:

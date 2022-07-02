@@ -22,6 +22,7 @@ async def main():
                         tienda = f"Tienda{JSONObject['tienda']}"
                         
                         logging.track_event("Received: " + str(msg))
+                        receiver.complete_message(msg)
                         logging.track_event(f"Inicia la generacion de XML : ano : {ano}, mes : {mes}, tienda : {tienda} ")
                         logging.flush()
 
@@ -29,11 +30,13 @@ async def main():
                         
                         logging.track_event(f"Se ha generado el XML : ano : {ano}, mes : {mes}, tienda : {tienda} ")
                         logging.flush()
+                        
                     except Exception as e:
                         logging.track_exception(*sys.exc_info(), properties={ 'ano': ano, 'mes' : mes, 'tienda': tienda })
                         logging.flush()
-                    else:
-                        receiver.complete_message(msg)
+                        
+                    
+                        
         time.sleep(10)
 
 if __name__ == '__main__':

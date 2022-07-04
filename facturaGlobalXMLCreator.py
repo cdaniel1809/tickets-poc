@@ -1,11 +1,7 @@
 from applicationinsights import TelemetryClient
 import xml.etree.ElementTree as ET
 from connectionController import *
-from Entities.ControlDBEntities import ControlFacturaGlobal
 import time
-import sys 
-
-logging = TelemetryClient(APPINSIGHT_INSTRUMENTATION_HEY)
 
 def crearXML(ano, mes, tienda):
     try:
@@ -22,8 +18,7 @@ def crearXML(ano, mes, tienda):
         fecha_fin = time.time()
         registrarFacturaGlobalMongo(blob.url, fecha_inicio, fecha_fin, conteoTickets, ano, mes, tienda)
     except Exception as e:
-        logging.track_exception(*sys.exc_info(), properties={ 'ano': ano, 'mes' : mes, 'tienda': tienda })
-        logging.flush()
+       
         raise Exception(e)
 
 def registrarFacturaGlobalMongo(url, fecha_inicio, fecha_fin, ticketsEnFactura, ano, mes, tienda):

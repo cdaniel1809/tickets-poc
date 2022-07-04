@@ -3,10 +3,23 @@ import asyncio
 from connectionController import *
 from facturaGlobalXMLCreator import *
 from azure.servicebus import ServiceBusClient
-from applicationinsights import TelemetryClient
+import logging
 
-logging = TelemetryClient(APPINSIGHT_INSTRUMENTATION_HEY)
+from opencensus.trace import config_integration
+from opencensus.trace.samplers import AlwaysOnSampler
+from opencensus.trace.tracer import Tracer
 
+
+from opencensus.ext.azure.log_exporter import AzureLogHandler
+
+
+config_integration.trace_integrations(['logging'])
+logging.basicConfig(format='%(asctime)s traceId=%(traceId)s spanId=%(spanId)s %(message)s')
+tracer = Tracer(sampler=AlwaysOnSampler())
+
+logger = logging.getLogger(__name__)
+logger.addHandler(AzureLogHandler(connection_string='InstrumentationKey=d85f6718-2588-4168-b8d9-0d9f1ac6b9d8'))
+logger.warning('Iniciando el proceso de generación de XML Global!')
 
 async def main():
     servicebus_client = ServiceBusClient.from_connection_string(conn_str=CONNECTION_STR, logging_enable=True)
@@ -21,22 +34,19 @@ async def main():
                         mes = JSONObject['mes']
                         tienda = f"Tienda{JSONObject['tienda']}"
                         
-                        logging.track_event("Received: " + str(msg))
+                        logger.warning("Received: " + str(msg))
                         receiver.complete_message(msg)
-                        logging.track_event(f"Inicia la generacion de XML : ano : {ano}, mes : {mes}, tienda : {tienda} ")
-                        logging.flush()
+                        logger.warning(f"Inicia la generacion de XML : ano : {ano}, mes : {mes}, tienda : {tienda} ")
 
                         crearXML(ano,mes,tienda )
                         
-                        logging.track_event(f"Se ha generado el XML : ano : {ano}, mes : {mes}, tienda : {tienda} ")
-                        logging.flush()
+                        logger.warning(f"Se ha generado el XML : ano : {ano}, mes : {mes}, tienda : {tienda} ")
+                        
                         
                     except Exception as e:
-                        logging.track_exception(*sys.exc_info(), properties={ 'ano': ano, 'mes' : mes, 'tienda': tienda })
-                        logging.flush()
-                        
-                    
-                        
+                        properties={ 'ano': ano, 'mes' : mes, 'tienda': tienda }
+                        logger.exception('Captured an exception : ' , extra=properties)
+                                  
         time.sleep(10)
 
 if __name__ == '__main__':

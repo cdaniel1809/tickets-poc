@@ -31,7 +31,7 @@ async def run():
                     event_data_batch.add(EventData(JSON))
                 # Send the batch of events to the event hub.
                 await producer.send_batch(event_data_batch)
-                print (f"Tickets Sended Tienda {str(i)} enviados {str( (y + 1) * 333)} : total enviado  {str( ((i- 1) * 22000) + ((y + 1) * 222))}")
+                print (f"Tickets Sended Tienda {str(i)} enviados {str( (y + 1) * 333)}")
                 #time.sleep(1)
             i += 1
             

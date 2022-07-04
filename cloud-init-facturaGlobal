@@ -6,7 +6,7 @@ apt_upgrade: true
 # Install packages
 packages:
  - python3-pip
- - ntp
+ 
 runcmd:
  - [git, clone, 'https://github.com/cdaniel1809/tickets-poc.git']
  - [cd, 'tickets-poc']

@@ -1,4 +1,3 @@
-from applicationinsights import TelemetryClient
 import xml.etree.ElementTree as ET
 from connectionController import *
 import time

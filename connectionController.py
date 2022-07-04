@@ -47,13 +47,14 @@ def getMongoControllerConnection():
 
 def get_Connection(year, month, collectionName, dbName):
     global connections
-    key = f"{year}-{month}-{collectionName}"
+    key = f"{year}-{month}" #-{collectionName}
     if key in connections:
-        return connections[key]
+        mydb = connections[key]
+        return  mydb[collectionName]
     else:
         mongoConnectionString = f"mongodb://mongoAdmin:Pa$$w0rd#12345@mongo-{year}-{month}.eastus.cloudapp.azure.com:27017/?authSource=admin&authMechanism=SCRAM-SHA-256"
         myclient = pymongo.MongoClient(mongoConnectionString)
         mydb = myclient[dbName]
+        connections[key] = mydb
         mycol = mydb[collectionName]
-        connections[key] = mycol
-        return connections[key]
+        return mycol
